@@ -2,7 +2,7 @@
 
 ## Outcome
 
-Basic trivia quiz app.
+Basic trivia quiz app with questions about female hormones.
 
 ## Topics Covered
 
