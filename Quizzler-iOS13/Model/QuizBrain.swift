@@ -1,20 +1,14 @@
 //
-//  ViewController.swift
+//  QuizBrain.swift
 //  Quizzler-iOS13
 //
-//  Created by Angela Yu on 12/07/2019.
-//  Copyright © 2019 The App Brewery. All rights reserved.
+//  Created by River Pease on 10/6/24.
+//  Copyright © 2024 The App Brewery. All rights reserved.
 //
 
-import UIKit
+import Foundation;
 
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var questionLabel: UILabel!
-    @IBOutlet weak var progressBar: UIProgressView!
-    
-    @IBOutlet weak var trueBtn: UIButton!
-    @IBOutlet weak var falseBtn: UIButton!
+struct QuizBrain {
     
     let quiz = [
         Question(question: "Estrogen is primarily responsible for the development of female secondary sexual characteristics.", answer: "True"),
@@ -31,44 +25,38 @@ class ViewController: UIViewController {
     ]
     
     var qNum = 0
+    var score = 0 // starting score
     
-    @IBAction func answerBtnPressed(_ sender: UIButton) {
-        
-        let userAnswer = sender.currentTitle // "True" or "False"
-        let answer = quiz[qNum].answer // Access current correct answer
-        
-        if userAnswer == answer {
-            sender.backgroundColor = UIColor.green
+    mutating func checkAnswer(_ answer: String) -> Bool {
+        if answer == quiz[qNum].answer {
+            score += 1
+            return true;
         } else {
-            sender.backgroundColor = UIColor.red
+            return false;
         }
-        
+    }
+    
+    func getQuestionText() -> String {
+        return quiz[qNum].question
+    }
+    
+    func getProgress() -> Float {
+        return Float(qNum + 1) / Float(quiz.count)
+    }
+    
+    // When you make a method that changes a property of the struct from within itself, must mark as mutating
+    // If you make an immutable instance of the struct (use let instead of var), you can't call a mutating function on that object
+    mutating func nextQuestion() {
         if qNum + 1 < quiz.count {
             qNum += 1
         } else {
             qNum = 0
+            score = 0
         }
-    
-        Timer.scheduledTimer(timeInterval: 0.2, target: self, selector: #selector(updateUI), userInfo: nil, repeats: false)
-    
     }
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        updateUI()
+    func getScore() -> Int {
+        return score
     }
     
-    @objc func updateUI() {
-        
-        questionLabel.text = quiz[qNum].question
-        trueBtn.backgroundColor = UIColor.clear
-        falseBtn.backgroundColor = UIColor.clear
-
-        progressBar.progress = Float(qNum + 1) / Float(quiz.count)
-        
-    }
-
-
 }
-
